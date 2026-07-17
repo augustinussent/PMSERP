@@ -31,55 +31,53 @@ def sync_menus():
         
         print(f"\nProcessing Menu for: {outlet_name}")
         
-        # 3. Create or Update URY Menu for this Outlet
-        menu_name = f"Menu - {outlet_name}"
-        if not frappe.db.exists("URY Menu", menu_name):
-            menu_doc = frappe.new_doc("URY Menu")
-            # URY Menu uses naming series or we can set it? Usually it's autoname.
-            # We'll just create it and see its name
-            menu_doc.name = menu_name
-            menu_doc.branch = branch
-            menu_doc.enabled = 1
-            menu_doc.insert(ignore_permissions=True)
-            actual_menu_name = menu_doc.name
-            print(f"  Created URY Menu: {actual_menu_name}")
-        else:
-            menu_doc = frappe.get_doc("URY Menu", menu_name)
-            actual_menu_name = menu_doc.name
-            print(f"  Using existing URY Menu: {actual_menu_name}")
-            
-        # Clear existing items to avoid duplicates
-        menu_doc.set("items", [])
-        
-        # 4. Fetch all Kamra Menu Items for this outlet
+        # Fetch all Kamra Menu Items for this outlet
         kamra_items = frappe.get_all("Menu Item", 
                                      filters={"outlet": outlet_id},
                                      fields=["name", "item", "item_name", "price", "category", "available"])
         
+        # 3. Create or Update URY Menu for this Outlet
+        menu_name = f"Menu - {outlet_name}"
+        if not frappe.db.exists("URY Menu", menu_name):
+            menu_doc = frappe.new_doc("URY Menu")
+            menu_doc.name = menu_name
+            menu_doc.branch = branch
+            menu_doc.enabled = 1
+            is_new = True
+        else:
+            menu_doc = frappe.get_doc("URY Menu", menu_name)
+            menu_doc.set("items", [])
+            is_new = False
+            
         for item in kamra_items:
             # Ensure URY Menu Course exists
             course_name = item.category
             if course_name and not frappe.db.exists("URY Menu Course", course_name):
                 course_doc = frappe.new_doc("URY Menu Course")
-                # URY Menu Course probably has just a name or title
                 try:
                     course_doc.name = course_name
                     course_doc.course_name = course_name
                     course_doc.insert(ignore_permissions=True)
                 except:
-                    # If it fails, maybe it uses a different field. We'll skip creating course safely
                     pass
             
             # Append to URY Menu
             menu_doc.append("items", {
-                "item": item.item,  # This links to the core ERPNext Item (shared inventory!)
+                "item": item.item,
                 "item_name": item.item_name,
                 "rate": item.price,
                 "course": course_name if frappe.db.exists("URY Menu Course", course_name) else None,
                 "disabled": 0 if item.available else 1
             })
             
-        menu_doc.save(ignore_permissions=True)
+        if is_new:
+            menu_doc.insert(ignore_permissions=True)
+            print(f"  Created URY Menu: {menu_doc.name}")
+        else:
+            menu_doc.save(ignore_permissions=True)
+            print(f"  Updated existing URY Menu: {menu_doc.name}")
+            
+        actual_menu_name = menu_doc.name
         print(f"  Synced {len(kamra_items)} items to URY Menu '{actual_menu_name}'.")
         
         # 5. Link Menu to URY Restaurant
