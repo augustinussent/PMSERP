@@ -263,10 +263,10 @@
    "options": "Individual\nGroup\nCorporate"
   },
   {
-   "fieldname": "company",
+   "fieldname": "corporate_client",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company"
+   "label": "Corporate Client",
+   "options": "Corporate Client"
   },
   {
    "fieldname": "group_booking",
@@ -420,14 +420,14 @@
    "label": "Occupants"
   },
   {
-   "description": "Everyone staying in the room — the legal hotel register. Printed on the GRC.",
+   "description": "Everyone staying in the room \u00e2\u20ac\u201d the legal hotel register. Printed on the GRC.",
    "fieldname": "occupants",
    "fieldtype": "Table",
    "label": "Occupants",
    "options": "Stay Occupant"
   },
   {
-   "description": "Extras chosen at booking — posted to the guest folio when it opens.",
+   "description": "Extras chosen at booking \u00e2\u20ac\u201d posted to the guest folio when it opens.",
    "fieldname": "addons",
    "fieldtype": "Table",
    "label": "Add-ons",

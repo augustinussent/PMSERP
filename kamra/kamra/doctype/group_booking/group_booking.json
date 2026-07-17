@@ -38,10 +38,10 @@
   },
   {
    "description": "Set for corporate groups",
-   "fieldname": "company",
+   "fieldname": "corporate_client",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company"
+   "label": "Corporate Client",
+   "options": "Corporate Client"
   },
   {
    "fieldname": "column_break_a",

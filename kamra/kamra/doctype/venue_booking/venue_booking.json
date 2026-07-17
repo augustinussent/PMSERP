@@ -108,10 +108,10 @@
    "label": "Column Break B"
   },
   {
-   "fieldname": "company",
+   "fieldname": "corporate_client",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company"
+   "label": "Corporate Client",
+   "options": "Corporate Client"
   },
   {
    "fieldname": "attendees",
