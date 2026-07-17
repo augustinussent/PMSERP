@@ -1,0 +1,109 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-07-16 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enable_sync",
+  "default_company",
+  "cash_bank_account",
+  "revenue_accounts_section",
+  "room_revenue_account",
+  "fnb_revenue_account",
+  "laundry_revenue_account",
+  "event_revenue_account",
+  "tax_accounts_section",
+  "service_charge_account",
+  "pb1_tax_account"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "enable_sync",
+   "fieldtype": "Check",
+   "label": "Enable ERPNext Sync"
+  },
+  {
+   "fieldname": "default_company",
+   "fieldtype": "Link",
+   "label": "Default Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "cash_bank_account",
+   "fieldtype": "Link",
+   "label": "Cash / Bank Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "revenue_accounts_section",
+   "fieldtype": "Section Break",
+   "label": "Revenue Accounts"
+  },
+  {
+   "fieldname": "room_revenue_account",
+   "fieldtype": "Link",
+   "label": "Room Revenue Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "fnb_revenue_account",
+   "fieldtype": "Link",
+   "label": "F&B Revenue Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "laundry_revenue_account",
+   "fieldtype": "Link",
+   "label": "Laundry Revenue Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "event_revenue_account",
+   "fieldtype": "Link",
+   "label": "Event Revenue Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "tax_accounts_section",
+   "fieldtype": "Section Break",
+   "label": "Tax Accounts"
+  },
+  {
+   "fieldname": "service_charge_account",
+   "fieldtype": "Link",
+   "label": "Service Charge Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "pb1_tax_account",
+   "fieldtype": "Link",
+   "label": "PB1 Tax Account",
+   "options": "Account"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-07-16 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Kamra",
+ "name": "ERPNext Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
