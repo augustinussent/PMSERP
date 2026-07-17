@@ -1,7 +1,7 @@
 import frappe
 def inspect_rates():
     print("--- Room Types ---")
-    for rt in frappe.get_all("Room Type", fields=["name", "type_name", "base_price"]):
+    for rt in frappe.get_all("Room Type", fields=["name", "room_type_name", "base_price"]):
         print(f"  {rt.name}: base={rt.base_price}")
         
     print("\n--- Rate Plans ---")
