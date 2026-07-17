@@ -6,6 +6,27 @@ All notable changes to Kamra PMS are documented here. Format follows
 existing install on upgrade (removed doctypes, removed API endpoints),
 MINOR for new features, PATCH for fixes.
 
+## [2.1.0](https://github.com/augustinussent/PMSERP/compare/v2.0.0...v2.1.0) (2026-07-17)
+
+
+### Features
+
+* script to bulk setup pos outlets and menus ([e0b5eb1](https://github.com/augustinussent/PMSERP/commit/e0b5eb160361b2dc6b0279b788d9a139455678af))
+* script to bulk setup rooms ([c66bdda](https://github.com/augustinussent/PMSERP/commit/c66bdda24e500baf7fce27c7b4e674645167ba0a))
+* script to bulk setup venues ([5babffe](https://github.com/augustinussent/PMSERP/commit/5babffe017f6bf6b4d980f0addb6d9748dbaab09))
+
+
+### Bug Fixes
+
+* correct broken import syntax in Laundry.tsx ([e373d1d](https://github.com/augustinussent/PMSERP/commit/e373d1d7777acfced803a2a2449b2ee7e504ba0b))
+* correct variable name in print statement ([fd17bc4](https://github.com/augustinussent/PMSERP/commit/fd17bc44d09a8d0a28cebc137c2b7d2f12a4b4de))
+* downgrade Kamra python requirement to &gt;=3.10 ([606de38](https://github.com/augustinussent/PMSERP/commit/606de383e0dd1855a12d9e24f8f1717eb397d33a))
+* outlets without items share menu from same kitchen ([3bdcf67](https://github.com/augustinussent/PMSERP/commit/3bdcf67fdf3a2ca8872597d92e5998d9506a7d78))
+* query DB directly instead of Company attributes ([2d425cd](https://github.com/augustinussent/PMSERP/commit/2d425cd3ddb1a0e8febb8eb7a062c98bf8e163a9))
+* resolve TS errors replacing inr with idr imports ([9c09e2d](https://github.com/augustinussent/PMSERP/commit/9c09e2d2b6cf206137e3b51d117c0b4859cd0074))
+* use correct primary key for room type existence check ([d53e542](https://github.com/augustinussent/PMSERP/commit/d53e542b4e60344fc0040ea882e62122a13b8eb2))
+* use proper room type ID in setup script ([b94bf10](https://github.com/augustinussent/PMSERP/commit/b94bf103d2a8f2152325dd2b423512c2f43d6443))
+
 ## [2.0.0] - 2026-07-08
 
 ### Added
