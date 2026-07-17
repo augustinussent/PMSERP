@@ -12,26 +12,18 @@ def setup_pos_profile():
 
     comp_doc = frappe.get_doc("Company", company)
     
-    # Get or figure out required accounts
-    warehouse = comp_doc.default_warehouse or frappe.db.get_value("Warehouse", 
+    # Query directly - don't rely on Company attributes
+    warehouse = frappe.db.get_value("Warehouse", 
         {"company": company, "is_group": 0}, "name")
     
-    write_off_account = comp_doc.write_off_account
-    write_off_cost_center = comp_doc.cost_center
+    write_off_account = frappe.db.get_value("Account",
+        {"company": company, "account_type": "Expense Account", "is_group": 0}, "name")
     
-    # Find income account
+    write_off_cost_center = frappe.db.get_value("Cost Center",
+        {"company": company, "is_group": 0}, "name")
+    
     income_account = frappe.db.get_value("Account", 
         {"company": company, "account_type": "Income Account", "is_group": 0}, "name")
-    
-    # Find expense account for write-off if not set
-    if not write_off_account:
-        write_off_account = frappe.db.get_value("Account",
-            {"company": company, "account_type": "Expense Account", "is_group": 0}, "name")
-    
-    # Find cost center
-    if not write_off_cost_center:
-        write_off_cost_center = frappe.db.get_value("Cost Center",
-            {"company": company, "is_group": 0}, "name")
     
     print(f"  Company: {company}")
     print(f"  Warehouse: {warehouse}")
