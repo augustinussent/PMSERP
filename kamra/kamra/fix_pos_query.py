@@ -23,6 +23,7 @@ def fix_company_query():
     if not frappe.db.exists("Property Setter", {"doc_type": doctype, "property": "search_fields"}):
         ps = frappe.new_doc("Property Setter")
         ps.doc_type = doctype
+        ps.doctype_or_field = "DocType"
         ps.property = "search_fields"
         ps.property_type = "Data"
         ps.value = current_search_fields
