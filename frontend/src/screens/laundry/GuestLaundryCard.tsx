@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Check, Shirt, Zap } from "lucide-react"
 import { call } from "../../lib/api"
 import { Button } from "../../components/ui/button"
-import { inr, type Rate } from "./shared"
+import { idr, type Rate } from "./shared"
 
 /** In-stay guest self-service: request a laundry pickup from the check-in page.
  * Read-only price list + a request button. The guest never sees a folio or a

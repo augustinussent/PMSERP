@@ -5,7 +5,7 @@ import { Badge } from "../components/ui/badge"
 import { cn } from "../lib/utils"
 import {
   ExpressToggle,
-  inr,
+  idr,
   STATUS_TONE,
   useLaundryBoard,
   type LaundryOrder,
