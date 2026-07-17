@@ -37,6 +37,7 @@ def sync_menus():
             menu_doc = frappe.new_doc("URY Menu")
             # URY Menu uses naming series or we can set it? Usually it's autoname.
             # We'll just create it and see its name
+            menu_doc.name = menu_name
             menu_doc.branch = branch
             menu_doc.enabled = 1
             menu_doc.insert(ignore_permissions=True)
@@ -62,6 +63,7 @@ def sync_menus():
                 course_doc = frappe.new_doc("URY Menu Course")
                 # URY Menu Course probably has just a name or title
                 try:
+                    course_doc.name = course_name
                     course_doc.course_name = course_name
                     course_doc.insert(ignore_permissions=True)
                 except:
