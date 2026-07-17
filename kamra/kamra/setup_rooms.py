@@ -33,17 +33,26 @@ def setup_rooms():
         "EXECUTIVE": ["301", "302", "303", "304", "305", "306", "307", "308", "309", "310", "311"]
     }
 
+    # Map room types to their actual Frappe ID (autoname format: {property}-{code})
+    room_type_ids = {
+        "DELUXE": f"{property_name}-DLX",
+        "SUPERIOR": f"{property_name}-SUP",
+        "DELUXE BALCONY": f"{property_name}-DLXB",
+        "EXECUTIVE": f"{property_name}-EXE"
+    }
+
     # Create Rooms
     print("\nSetting up Rooms...")
     frappe.db.commit()
-    for room_type, room_numbers in rooms.items():
+    for room_type_name, room_numbers in rooms.items():
+        rt_id = room_type_ids[room_type_name]
         for number in room_numbers:
             # Check if room already exists
             if not frappe.db.exists("Room", {"property": property_name, "room_number": number}):
                 doc = frappe.new_doc("Room")
                 doc.property = property_name
                 doc.room_number = number
-                doc.room_type = room_type
+                doc.room_type = rt_id
                 
                 # Assign floor based on the first digit of room number (except for "001" etc)
                 if len(number) >= 3 and number.isdigit():
