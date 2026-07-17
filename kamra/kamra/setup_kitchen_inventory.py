@@ -39,7 +39,9 @@ def setup_kitchen_inventory():
     if not parent_cost_center:
         parent_cost_center = frappe.db.get_value("Cost Center", {"is_group": 1, "company": company, "cost_center_name": ["like", "%Expense%"]}, "name")
     if not parent_cost_center:
-        parent_cost_center = frappe.db.get_value("Cost Center", {"is_group": 1, "company": company, "parent_cost_center": ["in", ["", None]]}, "name")
+        fallback = frappe.get_all("Cost Center", filters={"is_group": 1, "company": company}, limit=1)
+        if fallback:
+            parent_cost_center = fallback[0].name
 
     # 5. Create Cost Centers
     cost_centers = [
