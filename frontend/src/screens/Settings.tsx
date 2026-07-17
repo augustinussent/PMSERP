@@ -192,7 +192,7 @@ const PROPERTY_SPECS: Spec[] = [
 const STAY_TAX_SPECS: Spec[] = [
   { field: "checkin_time", label: "Check-in time", type: "time" },
   { field: "checkout_time", label: "Check-out time", type: "time" },
-  { field: "gst_rate_high", label: "PB1 & Service %", type: "number" },
+  { field: "gst_rate_low", label: "PB1 & Service %", type: "number" },
   {
     field: "rates_include_tax",
     label: "Displayed rates include PB1",

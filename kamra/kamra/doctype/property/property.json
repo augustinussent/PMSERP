@@ -201,7 +201,7 @@
   {
    "fieldname": "gstin",
    "fieldtype": "Data",
-   "label": "GSTIN"
+   "label": "PB1IN"
   },
   {
    "default": "0",
@@ -218,13 +218,14 @@
   {
    "fieldname": "sb_gst",
    "fieldtype": "Section Break",
-   "label": "GST Rules"
+   "label": "PB1 Rules"
   },
   {
    "default": "Fixed",
    "description": "Slab: rate decides GST (India). Fixed: use the room type's tax_percent.",
    "fieldname": "gst_mode",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Room GST Mode",
    "options": "Slab\nFixed"
   },
@@ -232,18 +233,20 @@
    "default": "7500",
    "fieldname": "gst_slab_threshold",
    "fieldtype": "Currency",
-   "label": "Slab Threshold (₹/night)"
+   "hidden": 1,
+   "label": "Slab Threshold"
   },
   {
    "default": "5",
    "fieldname": "gst_rate_low",
    "fieldtype": "Percent",
-   "label": "GST at/below threshold"
+   "label": "PB1 & Service %"
   },
   {
    "default": "18",
    "fieldname": "gst_rate_high",
    "fieldtype": "Percent",
+   "hidden": 1,
    "label": "GST above threshold"
   },
   {
