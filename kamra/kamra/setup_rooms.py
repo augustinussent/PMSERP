@@ -14,7 +14,8 @@ def setup_rooms():
     # Create Room Types
     print("Setting up Room Types...")
     for rt in room_types:
-        if not frappe.db.exists("Room Type", rt["name"]):
+        rt_id = f"{property_name}-{rt['code']}"
+        if not frappe.db.exists("Room Type", rt_id):
             doc = frappe.new_doc("Room Type")
             doc.property = property_name
             doc.room_type_name = rt["name"]
