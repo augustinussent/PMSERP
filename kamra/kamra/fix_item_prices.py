@@ -4,7 +4,7 @@ def fix_item_prices():
     print("Checking and fixing ERPNext Item Prices...")
     
     # Ambil semua item dari Kamra menu items
-    menu_items = frappe.get_all("Kamra Menu Item", fields=["item_code", "base_price"])
+    menu_items = frappe.get_all("Menu Item", fields=["item_code", "base_price"])
     
     price_list = "Standard Selling"
     
