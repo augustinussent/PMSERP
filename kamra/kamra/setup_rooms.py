@@ -63,7 +63,7 @@ def setup_rooms():
                         doc.floor = f"Floor {number[0]}"
                 
                 doc.insert(ignore_permissions=True)
-                print(f"Created Room: {number} ({room_type})")
+                print(f"Created Room: {number} ({room_type_name})")
     
     frappe.db.commit()
     print("\nAll rooms have been set up successfully!")
