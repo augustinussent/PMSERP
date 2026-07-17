@@ -14,6 +14,19 @@ def sync_menus():
         print(f"Error: Branch '{branch}' not found!")
         return
 
+    # Get default Item Group (or create one for F&B)
+    item_group = "Products"
+    if not frappe.db.exists("Item Group", "Food & Beverage"):
+        if frappe.db.exists("Item Group", "All Item Groups"):
+            ig = frappe.new_doc("Item Group")
+            ig.item_group_name = "Food & Beverage"
+            ig.parent_item_group = "All Item Groups"
+            ig.insert(ignore_permissions=True)
+            item_group = "Food & Beverage"
+            print(f"Created Item Group: Food & Beverage")
+    else:
+        item_group = "Food & Beverage"
+
     # 1. Fetch all Kamra POS Outlets
     kamra_outlets = frappe.get_all("POS Outlet", fields=["name", "outlet_name"])
     
@@ -34,41 +47,60 @@ def sync_menus():
         # Fetch all Kamra Menu Items for this outlet
         kamra_items = frappe.get_all("Menu Item", 
                                      filters={"outlet": outlet_id},
-                                     fields=["name", "item", "item_name", "price", "category", "available"])
+                                     fields=["name", "item_name", "price", "category", "available", "description"])
         
-        # 3. Create or Update URY Menu for this Outlet
+        if not kamra_items:
+            print(f"  No menu items found for {outlet_name}, skipping.")
+            continue
+        
+        # Create or find URY Menu
         menu_name = f"Menu - {outlet_name}"
-        if not frappe.db.exists("URY Menu", menu_name):
+        if frappe.db.exists("URY Menu", menu_name):
+            menu_doc = frappe.get_doc("URY Menu", menu_name)
+            menu_doc.set("items", [])
+            is_new = False
+        else:
             menu_doc = frappe.new_doc("URY Menu")
             menu_doc.name = menu_name
             menu_doc.branch = branch
             menu_doc.enabled = 1
             is_new = True
-        else:
-            menu_doc = frappe.get_doc("URY Menu", menu_name)
-            menu_doc.set("items", [])
-            is_new = False
-            
-        for item in kamra_items:
-            # Ensure URY Menu Course exists
-            course_name = item.category
+        
+        item_count = 0
+        for mi in kamra_items:
+            # --- Ensure ERPNext Item exists (shared inventory!) ---
+            item_code = mi.item_name  # use item_name as the Item code
+            if not frappe.db.exists("Item", item_code):
+                item_doc = frappe.new_doc("Item")
+                item_doc.item_code = item_code
+                item_doc.item_name = mi.item_name
+                item_doc.item_group = item_group
+                item_doc.stock_uom = "Nos"
+                item_doc.description = mi.description or mi.item_name
+                item_doc.is_stock_item = 0  # service/consumable item for now
+                item_doc.insert(ignore_permissions=True)
+                
+            # --- Ensure URY Menu Course exists ---
+            course_name = mi.category
             if course_name and not frappe.db.exists("URY Menu Course", course_name):
-                course_doc = frappe.new_doc("URY Menu Course")
                 try:
-                    course_doc.name = course_name
-                    course_doc.course_name = course_name
-                    course_doc.insert(ignore_permissions=True)
-                except:
+                    cd = frappe.new_doc("URY Menu Course")
+                    cd.name = course_name
+                    cd.course_name = course_name
+                    cd.insert(ignore_permissions=True)
+                    print(f"  Created URY Menu Course: {course_name}")
+                except Exception:
                     pass
             
-            # Append to URY Menu
+            # --- Append to URY Menu ---
             menu_doc.append("items", {
-                "item": item.item,
-                "item_name": item.item_name,
-                "rate": item.price,
-                "course": course_name if frappe.db.exists("URY Menu Course", course_name) else None,
-                "disabled": 0 if item.available else 1
+                "item": item_code,
+                "item_name": mi.item_name,
+                "rate": mi.price,
+                "course": course_name if course_name and frappe.db.exists("URY Menu Course", course_name) else None,
+                "disabled": 0 if mi.available else 1
             })
+            item_count += 1
             
         if is_new:
             menu_doc.insert(ignore_permissions=True)
@@ -77,11 +109,9 @@ def sync_menus():
             menu_doc.save(ignore_permissions=True)
             print(f"  Updated existing URY Menu: {menu_doc.name}")
             
-        actual_menu_name = menu_doc.name
-        print(f"  Synced {len(kamra_items)} items to URY Menu '{actual_menu_name}'.")
+        print(f"  Synced {item_count} items to URY Menu '{menu_doc.name}'.")
         
         # 5. Link Menu to URY Restaurant
-        # Try to find matching URY Restaurant
         match_key = outlet_name.lower()
         matched_ury_rest = None
         for key, val in ury_rest_map.items():
@@ -91,11 +121,13 @@ def sync_menus():
                 
         if matched_ury_rest:
             rest_doc = frappe.get_doc("URY Restaurant", matched_ury_rest)
-            rest_doc.active_menu = actual_menu_name
+            rest_doc.active_menu = menu_doc.name
             rest_doc.save(ignore_permissions=True)
             print(f"  Linked menu to URY Restaurant: {matched_ury_rest}")
         else:
-            print(f"  Warning: Could not find a matching URY Restaurant for '{outlet_name}'.")
-            print("  You may need to manually select this Active Menu in your URY Restaurant settings.")
+            print(f"  Warning: No matching URY Restaurant for '{outlet_name}'.")
+            print(f"  Please manually set Active Menu = '{menu_doc.name}' in your URY Restaurant.")
 
+    frappe.db.commit()
     print("\nSynchronization complete!")
+    print("Both Kamra POS and URY now point to the same ERPNext Items for shared inventory.")
