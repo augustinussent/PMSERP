@@ -126,33 +126,45 @@ def setup_ury():
         menu_name = f"Menu - {outlet_name}"
         outlet_items = [mi for mi in all_kamra_items if mi.outlet == outlet_id]
 
-        if frappe.db.exists("URY Menu", menu_name):
-            menu_doc = frappe.get_doc("URY Menu", menu_name)
-            menu_doc.set("items", [])
-            is_new_menu = False
+        # If this outlet has no items, share the menu from another outlet (same kitchen)
+        if not outlet_items:
+            # Find any existing URY Menu that has items
+            existing_menus = frappe.get_all("URY Menu", pluck="name", limit=1)
+            if existing_menus:
+                menu_name = existing_menus[0]
+                print(f"  [i] No own menu items — sharing menu: {menu_name}")
+            else:
+                print(f"  [!] No menu items and no existing menus to share. Skipping.")
+                continue
         else:
-            menu_doc = frappe.new_doc("URY Menu")
-            menu_doc.name = menu_name
-            menu_doc.branch = branch
-            menu_doc.enabled = 1
-            is_new_menu = True
+            # Create or update the menu for this outlet
+            if frappe.db.exists("URY Menu", menu_name):
+                menu_doc = frappe.get_doc("URY Menu", menu_name)
+                menu_doc.set("items", [])
+                is_new_menu = False
+            else:
+                menu_doc = frappe.new_doc("URY Menu")
+                menu_doc.name = menu_name
+                menu_doc.branch = branch
+                menu_doc.enabled = 1
+                is_new_menu = True
 
-        for mi in outlet_items:
-            course = mi.category if mi.category and frappe.db.exists("URY Menu Course", mi.category) else None
-            menu_doc.append("items", {
-                "item": mi.item_name,
-                "item_name": mi.item_name,
-                "rate": mi.price,
-                "course": course,
-                "disabled": 0 if mi.available else 1,
-            })
+            for mi in outlet_items:
+                course = mi.category if mi.category and frappe.db.exists("URY Menu Course", mi.category) else None
+                menu_doc.append("items", {
+                    "item": mi.item_name,
+                    "item_name": mi.item_name,
+                    "rate": mi.price,
+                    "course": course,
+                    "disabled": 0 if mi.available else 1,
+                })
 
-        if is_new_menu:
-            menu_doc.insert(ignore_permissions=True)
-            print(f"  [+] URY Menu: {menu_name} ({len(outlet_items)} items)")
-        else:
-            menu_doc.save(ignore_permissions=True)
-            print(f"  [~] URY Menu updated: {menu_name} ({len(outlet_items)} items)")
+            if is_new_menu:
+                menu_doc.insert(ignore_permissions=True)
+                print(f"  [+] URY Menu: {menu_name} ({len(outlet_items)} items)")
+            else:
+                menu_doc.save(ignore_permissions=True)
+                print(f"  [~] URY Menu updated: {menu_name} ({len(outlet_items)} items)")
 
         # ── 5c: URY Restaurant ──
         rest_name = outlet_name
