@@ -221,7 +221,7 @@
    "label": "GST Rules"
   },
   {
-   "default": "Slab",
+   "default": "Fixed",
    "description": "Slab: rate decides GST (India). Fixed: use the room type's tax_percent.",
    "fieldname": "gst_mode",
    "fieldtype": "Select",
