@@ -12,15 +12,12 @@ def setup_rates_and_meals():
     expense_root = frappe.db.get_value("Account",
         {"company": property_name, "root_type": "Income", "is_group": 1}, "name")
     
-    breakfast_acc = f"Pendapatan Banquet & Meeting - {abbr}"
-    if not frappe.db.exists("Account", breakfast_acc):
-        # Create it if somehow missing, though we just created it
-        pass
-        
+    breakfast_acc = frappe.db.get_value("Account", {"account_number": "4110.006"}) or f"4110.006 - Pendapatan Banquet & Meeting - {abbr}"
+    
     # We will set Kamra ERPNext Settings to use this for F&B Revenue
     settings = frappe.get_doc("ERPNext Settings")
     settings.fnb_revenue_account = breakfast_acc
-    settings.room_revenue_account = frappe.db.get_value("Account", {"account_number": "4110.001"}) or f"Pendapatan Kamar - {abbr}"
+    settings.room_revenue_account = frappe.db.get_value("Account", {"account_number": "4110.001"}) or f"4110.001 - Pendapatan Kamar - {abbr}"
     settings.save(ignore_permissions=True)
     print(f"[+] Updated ERPNext Settings to map F&B to: {settings.fnb_revenue_account}")
 
