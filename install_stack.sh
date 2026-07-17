@@ -18,6 +18,9 @@ bench get-app erpnext --branch version-15 https://github.com/frappe/erpnext.git
 echo "Pulling Ury ERP..."
 bench get-app ury https://github.com/ury-erp/ury.git
 
+echo "Pulling Kamra..."
+bench get-app kamra https://github.com/augustinussent/PMSERP.git
+
 # 3. Install the Apps on the Site
 # Prompt for site name
 read -p "Enter your Frappe site name (e.g. site1.local): " site_name
@@ -34,9 +37,6 @@ echo "Installing Ury ERP on $site_name..."
 bench --site $site_name install-app ury
 
 echo "Installing Kamra on $site_name..."
-# Asumsi folder PMSERP/kamra sudah dipindahkan ke folder apps/kamra
-# Atau Anda menggunakan repositori privat Anda:
-# bench get-app kamra https://your-private-repo.git
 bench --site $site_name install-app kamra
 
 # 4. Migrate and Build
